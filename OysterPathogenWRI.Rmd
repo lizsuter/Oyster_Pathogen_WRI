@@ -20,18 +20,32 @@ library(vegan)
 import the OTU table files- these have sample name in column name with abundance
 
 ```{r}
-b01 <- read_delim(file = "results/b01/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b02 <- read_delim(file = "results/b02/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b03 <- read_delim(file = "results/b03/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b04 <- read_delim(file = "results/b04/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b05 <- read_delim(file = "results/b05/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b06 <- read_delim(file = "results/b06/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b07 <- read_delim(file = "results/b07/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b08 <- read_delim(file = "results/b08/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b09 <- read_delim(file = "results/b09/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b10 <- read_delim(file = "results/b10/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b11 <- read_delim(file = "results/b11/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
-b12 <- read_delim(file = "results/b12/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b01 <- read_delim(file = "results/b01/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b02 <- read_delim(file = "results/b02/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b03 <- read_delim(file = "results/b03/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b04 <- read_delim(file = "results/b04/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b05 <- read_delim(file = "results/b05/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b06 <- read_delim(file = "results/b06/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b07 <- read_delim(file = "results/b07/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b08 <- read_delim(file = "results/b08/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b09 <- read_delim(file = "results/b09/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b10 <- read_delim(file = "results/b10/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b11 <- read_delim(file = "results/b11/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+b12 <- read_delim(file = "results/b12/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t", col_types = NULL)
+
+
+# b01 <- read_delim(file = "results/b01/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b02 <- read_delim(file = "results/b02/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b03 <- read_delim(file = "results/b03/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b04 <- read_delim(file = "results/b04/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b05 <- read_delim(file = "results/b05/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b06 <- read_delim(file = "results/b06/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b07 <- read_delim(file = "results/b07/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b08 <- read_delim(file = "results/b08/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b09 <- read_delim(file = "results/b09/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b10 <- read_delim(file = "results/b10/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b11 <- read_delim(file = "results/b11/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+# b12 <- read_delim(file = "results/b12/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
 ```
 ### Make tables
 
@@ -70,6 +84,7 @@ otumat <- as.matrix(otutable[,2:ncol(otutable)])
 rownames(otumat) <- paste0("OTU",1:nrow(otumat))
 head(otumat)
 ```
+
 ```{r}
 taxmat <- otutable[,1] %>% mutate(Name = str_remove_all(Name, pattern = ".__"))
 taxmat <- taxmat %>%
@@ -167,6 +182,7 @@ otutable %>%
 
 
 ### To Do
+- remove contamination
 - pull out most abundance spp from each sample and, for potential pathogens, calculate % age of total community
 
 

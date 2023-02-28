@@ -1,0 +1,62 @@
+---
+title: "DNA Extraction Protocol"
+output: html_notebook
+---
+
+This protocol was optimized for extraction of long reads from oyster microbiomes. Modified from [Suter et al. 2017](https://ami-journals.onlinelibrary.wiley.com/doi/10.1111/1462-2920.13997).
+
+## Reagents
+- Lysozyme 
+- Proteinase K solution
+- Sodium dodecyl sulfate (20%)
+- Phenol:Chloroform:Isoamyl alcohol (25:24:1; pH 8.0)
+  - Prepare by adding supplied buffer, shake well, allow phases to separate and check pH of buffer using pH paper.  Add hydroxyquinoline to a final concentration of 0.1% (100 mg hydroxyquinoline per 100 ml phenol:Chloroform:IAA).
+- Chloroform:Isoamyl alcohol (24:1)
+- TE buffer
+- 0.5 M EDTA 
+- 1 M Tris (pH 8.3)
+- Sucrose
+- Sterile water
+- Amicon Ultra-4 w/ 100 kDa MWCO Centrifugal Filter Unit
+
+
+#### Prepare lysis buffer (adjust volumes according to sample number):
+<i>Filter sterilize or autoclave before use</i>
+
+| Final Concentration      | For 20 ml: |
+| ----------- | ----------- |
+| 40 mM EDTA      | 1.6 ml of 0.5 M EDTA       |
+| 50 mM Tris (pH 8.3)   | 1.0 ml of 1 M Tris (pH 8.3)        |
+| 0.73 M Sucrose   | 5.13 g Sucrose        |
+|    | Sterile water to 20 ml        |
+
+
+#### Prepare enzymes (adjust volumes according to sample number):
+- Lysozyme solution: 2 mg lysozyme per 40 µl Lysis Buffer
+- Proteinase K solution: 1 mg Proteinase K per 100 µl Lysis Buffer
+
+## Extraction:
+
+1.	Thaw frozen samples and shuck. Add tissue to a 50ml conical tube.
+
+2.	Add 40 µl lysozyme solution to the sample. 
+
+3.	Incubate at 37°C rotating for 45 minutes.
+
+4.	Add 100 µl proteinase K solution and 100 µl 20% SDS.  Recap.
+
+5.	Incubate at 55°C while rotating for 2 hours.
+
+6.	Add 3ml Phenol:Chloroform:Isoamyl alcohol.  Vortex 10 seconds.
+
+7.	Spin for 5 minutes at 3500xG.
+
+8.	Carefully transfer aqueous phase (crude DNA extract) to new 15 ml falcon tube and add 3 ml Chloroform:Isoamyl alcohol.  Vortex 10 seconds.  Spin for 5 minutes at 2500xG.
+
+9. Prepare column by washing with 1ml TE. Centrifuge for ~5 min @ 2000g.
+
+10.	Carefully transfer aqueous phase from [10] to an Amicon  filter.  Concentrate to ~100 µl final volume (~10 min @ 2000XG for above filter. Spin longer if necessary.).    
+
+11.	Wash by adding ~4 ml TE buffer to filter and re-spin to final desired volume.
+
+12. Recover any remaining DNA off filter by rinsing with another 50 μl TE and pooling with volume from above. 
