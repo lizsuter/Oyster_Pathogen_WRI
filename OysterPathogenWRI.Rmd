@@ -1,0 +1,179 @@
+---
+title: "WRI Oyster Pathogen Project"
+output: html_notebook
+---
+
+### Libraries
+
+Analysis of output from MIrROR (see jupyter notebook for bioinformatics steps)
+
+```{r}
+library(tidyverse)
+library(phyloseq)
+library(microbiome)
+library(vegan)
+```
+
+
+
+### Import MIrROR results
+import the OTU table files- these have sample name in column name with abundance
+
+```{r}
+b01 <- read_delim(file = "results/b01/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b02 <- read_delim(file = "results/b02/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b03 <- read_delim(file = "results/b03/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b04 <- read_delim(file = "results/b04/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b05 <- read_delim(file = "results/b05/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b06 <- read_delim(file = "results/b06/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b07 <- read_delim(file = "results/b07/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b08 <- read_delim(file = "results/b08/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b09 <- read_delim(file = "results/b09/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b10 <- read_delim(file = "results/b10/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b11 <- read_delim(file = "results/b11/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+b12 <- read_delim(file = "results/b12/OTUtable/OUTPUT_std.txt", col_names = TRUE, delim = "\t ")
+```
+### Make tables
+
+
+join all samples into one variable, `otutable`
+```{r}
+otutable <- full_join(x = b01, y = b02, by = "#Name")
+otutable <- full_join(x = otutable, y = b03, by = "#Name")
+otutable <- full_join(x = otutable, y = b04, by = "#Name")
+otutable <- full_join(x = otutable, y = b05, by = "#Name")
+otutable <- full_join(x = otutable, y = b06, by = "#Name")
+otutable <- full_join(x = otutable, y = b07, by = "#Name")
+otutable <- full_join(x = otutable, y = b08, by = "#Name")
+otutable <- full_join(x = otutable, y = b09, by = "#Name")
+otutable <- full_join(x = otutable, y = b10, by = "#Name")
+otutable <- full_join(x = otutable, y = b11, by = "#Name")
+otutable <- full_join(x = otutable, y = b12, by = "#Name")
+
+```
+
+modify column names from "b01.fa" to just "b01" etc
+```{r}
+colnames(otutable) <- c("Name","b01","b02","b03","b04","b05","b06","b07","b08","b09","b10","b11","b12")
+```
+
+export to txt file
+```{r}
+# dir.create("results2")
+write_delim(x = otutable, file = "results2/otutable.txt")
+```
+
+reformat so can be loaded into phyloseq
+```{r}
+otutable[is.na(otutable)] <- 0
+otumat <- as.matrix(otutable[,2:ncol(otutable)])
+rownames(otumat) <- paste0("OTU",1:nrow(otumat))
+head(otumat)
+```
+```{r}
+taxmat <- otutable[,1] %>% mutate(Name = str_remove_all(Name, pattern = ".__"))
+taxmat <- taxmat %>%
+  separate(Name, sep = (";"), c("Phylum", "Class","Order","Family","Genus","Species"))
+rownames(taxmat) <- paste0("OTU",1:nrow(otumat))
+taxmat <- as.matrix(taxmat)
+head(taxmat)
+```
+
+Combine into phyloseq object
+
+```{r}
+OTU <- otu_table(otumat, taxa_are_rows = TRUE)
+TAX <- tax_table(taxmat)
+ps <- phyloseq(OTU, TAX)
+ps
+```
+
+
+### Plot phyla
+
+Test some plots
+```{r}
+ps_phyla <- tax_glom(ps, "Phylum")
+phylacountsplot <- plot_bar(ps_phyla, fill = "Phylum")
+phylacountsplot
+
+ggsave(plot = phylacountsplot, filename = "results2/phylacountsplot.png")
+
+```
+
+These are on the order of magnitude of reads I get with Illumina data so that's great. Sample B11 is the negative control- low # of hits makes sense. B1 and B10 are same oyster- diversity looks the same. Great.
+
+make rel abun table
+```{r}
+# convert to rel abun ("compositional")
+ps_compositional <- 
+  microbiome::transform(ps, transform = "compositional")
+
+```
+
+```{r}
+ps_compositional_phyla <- tax_glom(ps_compositional, "Phylum")
+phylumplot <- plot_bar(ps_compositional_phyla, fill = "Phylum")
+phylumplot
+ggsave(plot = phylumplot, filename = "results2/phylumplot.png")
+```
+
+### Check rarefaction
+
+```{r}
+tab <- otu_table(ps)
+class(tab) <- "matrix"
+
+rarecurve(t(tab), step=50, cex=0.5)
+
+# export
+png(file="results2/rarefaction.png")
+rarecurve(t(tab), step=50, cex=0.5)
+dev.off()
+```
+Most look OK. Negative control is worst one (makes sense). Rest, except maybe b01 and b10, have reached plateau
+
+### Check diversity
+```{r}
+shannons <- tibble(Div = diversity(x = t(otumat), index = "shannon"), samples = colnames(otumat))
+shannons
+shannonplot <- ggplot(shannons) +
+  geom_col(aes(y = as.numeric(Div), x = samples), fill = "aquamarine3") +
+  ylab("Shannon's Diversity Index") + xlab("")
+shannonplot
+
+ggsave(plot = shannonplot, filename = "results2/shannonsplot.png")
+
+```
+
+### Some sequencing statistics
+```{r}
+# total reads annotated
+sum(otutable[,2:length(otutable)])
+
+# No. of unique species in whole dataset
+dim(otutable)[1]
+
+# total reads per species, across all samples
+otutable %>%
+  mutate(sum = rowSums(across(where(is.numeric))))
+
+# total reads per sample
+otutable %>% 
+  summarise(across(where(is.numeric),sum))
+
+```
+
+
+
+### To Do
+- pull out most abundance spp from each sample and, for potential pathogens, calculate % age of total community
+
+
+### Questions to resolve
+How many reads were not annotated?   
+Confidence in alignment and annotation?  
+- [minimapper2 documentation](https://lh3.github.io/minimap2/minimap2.html) 
+- [MIRrROR repo](https://github.com/seoldh/MIrROR)
+- 
+

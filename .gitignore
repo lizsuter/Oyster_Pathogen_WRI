@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+/raw_data
+/MIrROR
+/results
+/results2
+/sample_data
+/summary-plots-log-transformed
+/trimmed_data_summary-plots
+/trimmed_fasta
