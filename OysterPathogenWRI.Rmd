@@ -159,6 +159,8 @@ shannonplot
 
 ggsave(plot = shannonplot, filename = "results2/shannonsplot.png")
 
+write_delim(x = shannons, file = "results2/shannons.txt")
+
 ```
 
 ### Some sequencing statistics
@@ -183,7 +185,7 @@ otutable %>%
 
 ### To Do
 - remove contamination
-- pull out most abundance spp from each sample and, for potential pathogens, calculate % age of total community
+- pull out most abundant spp from each sample and, for potential pathogens, calculate % age of total community
 
 
 ### Questions to resolve
