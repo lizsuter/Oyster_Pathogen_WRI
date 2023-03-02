@@ -186,6 +186,7 @@ otutable %>%
 ### To Do
 - remove contamination
 - pull out most abundant spp from each sample and, for potential pathogens, calculate % age of total community
+- post DNA extraction videos
 
 
 ### Questions to resolve
